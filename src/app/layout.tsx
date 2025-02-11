@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
+import Navbar from "@/components/Navbar";
 const inter = Inter ({ subsets:['latin']});
 
 const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={cn(
          'min-h-screen font-sans antialiased grainy', inter.className
         )}>
+          <Navbar />
         {children}
       </body>
     </html>
