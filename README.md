@@ -35,6 +35,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## next auth 
-## timestamp :: 1:20:37 
-## watch harkirat auth js and add authentication on your own
+ 
+### timestamp :: 2:25:13
+#### pefecting the dashboard 
