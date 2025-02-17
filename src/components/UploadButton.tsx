@@ -6,14 +6,49 @@ import {Button} from "@/components/ui/button";
 import Dropzone from "react-dropzone";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Cloud , File} from "lucide-react";
+import { Progress } from "./ui/progress";
+import { resolve } from "path";
+import { useUploadThing } from "@/lib/uploadthing";
+import { useToast } from "@/hooks/use-toast";
 
 const UploadDropzone = () =>{
         const [isUploading, setisUploading] = useState<boolean>(true)
+        const [uploadProgress, setuploadProgress] = useState<number>(0);
+        const {startUpload} = useUploadThing("pdfUploader")
+        const { toast } = useToast()
 
+        const startSimulatedProgress = () =>{
+            setuploadProgress(0)
+            const interval = setInterval( ( ) =>{
+                 setuploadProgress((prevProgress) =>{
+                    if(prevProgress >= 95){
+                        clearInterval(interval)
+                        return prevProgress
+                    }
+                    return prevProgress + 5
+                 })
+            },500 )
+            return interval
+        }
 
+    return  <Dropzone multiple={false} onDrop={async (acceptedFile) =>{
+        setisUploading(true)
 
-    return  <Dropzone multiple={false} onDrop={(acceptedFile) =>{
-        console.log(acceptedFile)
+        const progressInterval = startSimulatedProgress()
+        
+        /* handle file uploading */
+        const res = await startUpload(acceptedFile)
+
+        if(!res){
+            return toast({
+                title:'Something went wrong',
+                description:"Pleae try again later",
+                variant:'destructive'
+            })
+        }
+        clearInterval(progressInterval)
+        setuploadProgress(100)
+        
     }}> 
          {({getRootProps, getInputProps, acceptedFiles }) => (
             <div {...getRootProps()} className="border h-64 m-4 border-dashed border-gray-300 rounded-lg">
@@ -44,7 +79,7 @@ const UploadDropzone = () =>{
                     ):null}
                     {isUploading ? (
                         <div className="w-full mt-4 max-w-xs mx-auto">
-                        
+                        <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200"/>
                         </div>
                     ) : null}
 
